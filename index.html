@@ -2,206 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MMS Quiz - IBM</title>
+  <title>MMS Quiz</title>
   <style>
-    body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f0f4f8;
-    }
-    header {
-      background: #052f5f;
-      padding: 20px;
-      text-align: center;
-      color: white;
-    }
-    header img {
-      height: 50px;
-      display: block;
-      margin: 0 auto 10px;
-    }
-    .quiz-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-      max-width: 800px;
-      margin: 40px auto;
-    }
-    h2 {
-      text-align: center;
-      color: #052f5f;
-      margin-bottom: 20px;
-    }
-    .question {
-      margin-bottom: 25px;
-      padding: 15px;
-      background: #f9fbfd;
-      border-left: 5px solid #052f5f;
-      border-radius: 8px;
-    }
-    .question p {
-      font-weight: bold;
-      color: #052f5f;
-    }
-    .options label {
-      display: block;
-      margin: 8px 0;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: #fff;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .options label:hover {
-      background: #eaf2fb;
-      border-color: #052f5f;
-    }
-    input[type=radio] {
-      margin-right: 8px;
-    }
-    button {
-      display: block;
-      margin: 20px auto;
-      padding: 12px 30px;
-      font-size: 18px;
-      font-weight: bold;
-      background: #052f5f;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #004080;
-    }
-    .result {
-      margin-top: 25px;
-      padding: 20px;
-      background: #e6f4ea;
-      border-radius: 10px;
-      border: 2px solid #4caf50;
-      font-weight: bold;
-      color: #2e7d32;
-    }
-    .result p {
-      margin: 8px 0;
-    }
+    body { font-family: Arial, sans-serif; background: #f4f4f9; text-align: center; }
+    .quiz-container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.2); }
+    h1 { color: #0f62fe; }
+    .question { font-size: 1.2em; margin: 20px 0; }
+    .options button { display: block; width: 100%; margin: 10px 0; padding: 12px; border: none; border-radius: 8px; cursor: pointer; background: #e0e0e0; font-size: 1em; }
+    .options button:hover { background: #0f62fe; color: white; }
+    .timer { font-size: 1.1em; margin: 15px; color: #d12727; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <header>
-    <img src="https://freepngimg.com/save/59326-logo-graphic-ibm-designer-bee-free-photo-png/2000x602" alt="IBM Logo">
-    <h1>MMS Quiz</h1>
-  </header>
-
   <div class="quiz-container">
-    <h2>Answer all 10 questions and submit to see your results</h2>
-    <form id="quizForm"></form>
-    <button type="button" onclick="submitQuiz()">Submit Quiz</button>
-    <div id="result" class="result" style="display:none;"></div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM Logo" width="120"/>
+    <h1>MMS Quiz</h1>
+
+    <div id="start-screen">
+      <p>Welcome to the quiz. You will have 15 seconds for each question.</p>
+      <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+      <div class="timer">Time left: <span id="time">15</span>s</div>
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+      <h2>Your Result</h2>
+      <p id="score"></p>
+      <button onclick="location.reload()">Restart</button>
+    </div>
   </div>
 
   <script>
     const quizData = [
-      {
-        question: "1. What does MMS stand for in the context of this presentation?",
-        options: ["Marketing Management Services", "Managed Marketing Services", "Media Market Solutions", "Marketing Metrics System"],
-        answer: 1
-      },
-      {
-        question: "2. Which of the following is a key competitor in the MMS space?",
-        options: ["Adobe", "Infosys", "Wunderman", "SAP"],
-        answer: 2
-      },
-      {
-        question: "3. What percentage of marketing spend is typically allocated to MMS?",
-        options: ["10%", "25%", "40%", "60%"],
-        answer: 2
-      },
-      {
-        question: "4. What is one of the key buyer personas for MMS?",
-        options: ["Chief Financial Officer", "Chief Marketing Officer", "Chief Technology Officer", "Sales Director"],
-        answer: 1
-      },
-      {
-        question: "5. Which of the following is a core service offered under MMS?",
-        options: ["Cloud hosting", "Campaign execution", "Product development", "Sales training"],
-        answer: 1
-      },
-      {
-        question: "6. Which platform is commonly used in MMS operations?",
-        options: ["SAP", "Adobe Campaign", "Oracle CRM", "HubSpot"],
-        answer: 1
-      },
-      {
-        question: "7. What is the expected duration of the MMS contract?",
-        options: ["6 months", "1 year", "2 years", "5 years"],
-        answer: 2
-      },
-      {
-        question: "8. What percentage of BPO spend does MMS currently represent?",
-        options: ["5%", "8%", "12%", "20%"],
-        answer: 2
-      },
-      {
-        question: "9. What is the CAGR for MMS growth?",
-        options: ["2–3%", "4–6%", "6–8%", "10–12%"],
-        answer: 2
-      },
-      {
-        question: "10. What is the primary delivery model for MMS?",
-        options: ["Onshore only", "Offshore only", "Hybrid (Global + Local)", "Freelance"],
-        answer: 2
-      }
+      { q: "What does MMS stand for?", options: ["Marketing Management Services","Managed Marketing Services","Media Market Solutions","Marketing Metrics System"], answer: 1 },
+      { q: "Which of the following is a key competitor in the MMS space?", options: ["Adobe","Infosys","Wunderman","SAP"], answer: 0 },
+      { q: "What percentage of marketing spend is typically allocated to MMS?", options: ["10%","25%","40%","60%"], answer: 2 },
+      { q: "What is one of the key buyer personas for MMS?", options: ["Chief Financial Officer","Chief Marketing Officer","Chief Technology Officer","Sales Director"], answer: 1 },
+      { q: "Which of the following is a core service offered under MMS?", options: ["Cloud hosting","Campaign execution","Product development","Sales training"], answer: 1 },
+      { q: "Which platform is commonly used in MMS operations?", options: ["SAP","Adobe Campaign","Oracle CRM","HubSpot"], answer: 1 },
+      { q: "What is the expected duration of the MMS contract?", options: ["6 months","1 year","2 year","5 years"], answer: 2 },
+      { q: "What percentage of BPO spend does MMS currently represent?", options: ["5%","8%","12%","20%"], answer: 1 },
+      { q: "What is the CAGR for MMS growth?", options: ["2–3%","4–6%","6–8%","10–12%"], answer: 2 },
+      { q: "What is the primary delivery model for MMS?", options: ["Onshore only","Offshore only","Hybrid (Global + Local)","Freelance"], answer: 2 }
     ];
 
-    const quizForm = document.getElementById("quizForm");
+    let current = 0, score = 0, timer, timeLeft = 15;
 
-    // Render quiz questions
-    quizData.forEach((q, index) => {
-      const div = document.createElement("div");
-      div.classList.add("question");
-      div.innerHTML = `<p>${q.question}</p>`;
-      const optionsDiv = document.createElement("div");
-      optionsDiv.classList.add("options");
-      q.options.forEach((opt, i) => {
-        optionsDiv.innerHTML += `
-          <label>
-            <input type="radio" name="q${index}" value="${i}">
-            ${opt}
-          </label>
-        `;
+    function startQuiz() {
+      document.getElementById("start-screen").classList.add("hidden");
+      document.getElementById("quiz-screen").classList.remove("hidden");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      if (current >= quizData.length) {
+        endQuiz();
+        return;
+      }
+
+      document.getElementById("time").innerText = 15;
+      timeLeft = 15;
+      document.getElementById("question").innerText = quizData[current].q;
+      document.getElementById("options").innerHTML = "";
+      quizData[current].options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => selectAnswer(i);
+        document.getElementById("options").appendChild(btn);
       });
-      div.appendChild(optionsDiv);
-      quizForm.appendChild(div);
-    });
 
-    function submitQuiz() {
-      let score = 0;
-      let feedback = "";
-      quizData.forEach((q, index) => {
-        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        if (selected) {
-          if (parseInt(selected.value) === q.answer) {
-            score++;
-          } else {
-            feedback += `<p>❌ Q${index+1} - Correct Answer: <b>${q.options[q.answer]}</b></p>`;
-          }
-        } else {
-          feedback += `<p>⚠️ Q${index+1} - Not Answered (Correct: <b>${q.options[q.answer]}</b>)</p>`;
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time").innerText = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          nextQuestion();
         }
-      });
+      }, 1000);
+    }
 
-      document.getElementById("result").style.display = "block";
-      document.getElementById("result").innerHTML = `
-        <h3>Your Score: ${score} / ${quizData.length}</h3>
-        ${feedback}
-      `;
-      window.scrollTo(0, document.body.scrollHeight);
+    function selectAnswer(i) {
+      if (i === quizData[current].answer) score++;
+      clearInterval(timer);
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      current++;
+      loadQuestion();
+    }
+
+    function endQuiz() {
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("result-screen").classList.remove("hidden");
+      document.getElementById("score").innerText = `You scored ${score} out of ${quizData.length}`;
     }
   </script>
 </body>
